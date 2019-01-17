@@ -1,0 +1,27 @@
+sudo: false
+language: python
+python:
+- '3.3'
+cache: pip
+env:
+  matrix:
+  - DJANGO_VERSION=1.8.8
+install:
+- pip install -q Django==$DJANGO_VERSION
+- pip install coveralls
+- pip install mock
+- pip install south
+- pip install nose
+- pip install testfixtures
+deploy:
+  provider: pypi
+  user: Air-Mark
+  password: $PYPI_PASSWORD
+  on:
+    tags: true
+script:
+- python setup.py build
+- PYTHONHASHSEED=0 python setup.py nosetests --verbosity 2 --with-coverage --cover-tests
+  --cover-erase
+after_success:
+- coveralls

@@ -1,0 +1,78 @@
+version: '2'
+services:
+
+  redis:
+    image: redis:3.2.8-alpine
+    restart: always
+    command:
+      - redis-server
+      - --bind
+      - 0.0.0.0
+      - --port
+      - "6379"
+      - --maxmemory
+      - "500mb"
+      - --tcp-keepalive
+      - "0"
+      - --protected-mode
+      - "no"
+    hostname: redis
+
+
+  web:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    working_dir: /opt/web/
+    environment:
+      DEBUG_MODE: 0
+      ENVIRONMENT: development
+      SENTRY_ENVIRONMENT: development
+      DATABASES_DEFAULT_HOST: database
+      CACHES_DEFAULT_LOCATION: redis://cache:6379/1
+      BROKER_URL: redis://cache:6379/10
+      CELERY_RESULT_BACKEND: redis://cache:6379/10
+    command: |
+      sh -c "
+        chown developer /opt/web -R
+        python manage.py makemigrations
+        python manage.py migrate
+        python manage.py runserver 0.0.0.0:81
+        "
+    ports:
+      - "0.0.0.0:81:81"
+    volumes:
+        - ./example_project:/opt/web
+    links:
+      - redis:cache
+    depends_on:
+      - redis
+
+
+  celery_default:
+    extends:
+      file: celery_base.yml
+      service: celery
+    links:
+      - redis:cache
+    depends_on:
+      - redis
+    command: |
+      su -c "
+        celery worker -A example_project.celery_app.app --pool=solo --concurrency=1 --loglevel=ERROR -n default@%h
+      "
+
+
+  celery_flower:
+    extends:
+      file: celery_base.yml
+      service: celery
+    links:
+      - redis:cache
+    command: |
+      su -c "
+        celery flower -A example_project.celery_app.app
+        "
+    ports:
+      - "0.0.0.0:555:5555"

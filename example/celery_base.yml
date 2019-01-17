@@ -1,0 +1,19 @@
+version: '2'
+services:
+  celery:
+    restart: unless-stopped
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    environment:
+      DEBUG_MODE: 0
+      ENVIRONMENT: development
+      SENTRY_ENVIRONMENT: development
+      DATABASES_DEFAULT_HOST: database
+      CACHES_DEFAULT_LOCATION: redis://cache:6379/1
+      BROKER_URL: redis://cache:6379/10
+      CELERY_RESULT_BACKEND: redis://cache:6379/10
+      C_FORCE_ROOT: "true"
+    working_dir: /opt/web/
+    volumes:
+        - ./example_project:/opt/web
