@@ -1,5 +1,5 @@
 # coding: utf-8
-from celery import task, Task
+from celery import shared_task, Task
 from django.core.management import call_command
 import logging
 
@@ -14,13 +14,13 @@ class DjangoFilerVideoTask(Task):
             task_id, args, kwargs))
 
 
-@task(base=DjangoFilerVideoTask)
+@shared_task(base=DjangoFilerVideoTask)
 def run_conversion(*args, **kwargs):
     conversion_id = int(kwargs['conversion_id'])
     call_command('run_conversion', conversion_id=conversion_id)
 
 
-@task(base=DjangoFilerVideoTask)
+@shared_task(base=DjangoFilerVideoTask)
 def update_poster(*args, **kwargs):
     video_file_id = int(kwargs['video_file_id'])
     seek_to_duration = int(kwargs.get('seek_to_duration')) or None
