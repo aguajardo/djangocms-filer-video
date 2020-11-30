@@ -29,7 +29,7 @@ setup(
     ],
     keywords=['django', 'djangocms' 'filer', 'video'],
     install_requires=[
-        'Django >=1.8, <=1.11',
+        'Django <=1.11',
     ],
     test_suite='nose.collector',
 )
