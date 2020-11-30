@@ -4,7 +4,7 @@ from __future__ import absolute_import
 from ..models import VideoFile
 from filer.fields.file import AdminFileFormField, AdminFileWidget, FilerFileField
 from filer.models.foldermodels import Folder
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse as reverse_lazy
 from ..settings import FILER_VIDEO_DEFAULT_FOLDER
 
 
