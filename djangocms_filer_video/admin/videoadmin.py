@@ -3,7 +3,7 @@ from __future__ import absolute_import
 
 from django.conf.urls import url
 from django.contrib.admin import TabularInline, ModelAdmin
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse as reverse_lazy
 from django.http import HttpResponseBadRequest
 from django.http import JsonResponse
 from django.utils.translation import ugettext as _
