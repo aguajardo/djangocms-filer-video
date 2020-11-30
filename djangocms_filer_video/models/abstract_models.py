@@ -35,6 +35,7 @@ class AbstractConversionLog(models.Model):
         'djangocms_filer_video.ConvertedVideoFile',
         related_name='conversion_logs',
         null=True,
+        on_delete=models.CASCADE
     )
     log = models.TextField()
 
@@ -110,6 +111,7 @@ class AbstractConvertedVideoFile(VideoMetaMixin):
         'djangocms_filer_video.VideoFile',
         related_name='converted_files',
         null=True,
+        on_delete=models.CASCADE
     )
     file = models.FileField(_('file'), null=True, blank=True)
     status = models.CharField(_('status'), max_length=63, null=True)
