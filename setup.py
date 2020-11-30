@@ -29,7 +29,6 @@ setup(
     ],
     keywords=['django', 'djangocms' 'filer', 'video'],
     install_requires=[
-        'Django <=1.11',
     ],
     test_suite='nose.collector',
 )
