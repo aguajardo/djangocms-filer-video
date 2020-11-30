@@ -6,7 +6,7 @@ import math
 import operator
 from decimal import Decimal
 from django.apps import apps
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse as reverse_lazy
 from django.db import models
 from django.utils.translation import ugettext_lazy as _
 from filer.models.filemodels import File
